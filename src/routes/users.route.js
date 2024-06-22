@@ -63,8 +63,36 @@ router.post("/",validateUserInfo,async (req,res) => {
   }
 })
 
-router.patch("/:id",(req,res) => {
-  res.send("updating a user")
+router.patch("/:id",async (req,res) => {
+  const{firstName,lastName,email,occupation,avatarURL} = req.body
+  const id = req.params.id 
+  try{
+    let updateOperation;
+    if(firstName) {
+      updateOperation = await pool.query("UPDATE usersTable SET firstName=$1 WHERE id=$2",[firstName,id])
+    }
+    if(lastName) {
+      updateOperation = await pool.query("UPDATE usersTable SET lastName=$1 WHERE id=$2",[lastName,id])
+    }
+    if(email) {
+      updateOperation = await pool.query("UPDATE usersTable SET email=$1 WHERE id=$2",[email,id])
+    }
+    if(occupation) {
+      updateOperation = await pool.query("UPDATE usersTable SET occupation=$1 WHERE id=$2",[occupation,id])
+    }
+    if(avatarURL) {
+      updateOperation = await pool.query("UPDATE usersTable SET avatarURL=$1 WHERE id=$2",[avatarURL,id])
+    }
+    if(updateOperation.rowCount===1){
+      res.status(200).json({success:true,message:"Users updated successfully"})
+    }
+    else{
+      res.status(400).json({success:false,message:"Invalid user"})
+    }
+  }
+  catch(err){
+    res.status(500).json({success:false,message:err.message})    
+  }
 })
 
 router.delete("/:id",async (req,res) => {
