@@ -2,6 +2,7 @@ import express from 'express'
 import usersrouter from "./routes/users.route.js"
 
 const app = express();
+app.use(express.json());
 
 app.use("/users", usersrouter)
 // app.get("/",(req,res) => {

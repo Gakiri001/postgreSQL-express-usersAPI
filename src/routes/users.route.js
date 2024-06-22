@@ -29,8 +29,38 @@ router.get("/:id",async (req,res) => {
   }
 })
 
-router.post("/",async (req,res) => {
-  res.send("Post user to database")
+const validateUserInfo = (req,res,next) => {
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const email = req.body.email;
+  const occupation = req.body.occupation;
+  const avatarURL = req.body.avatarURL;
+
+  if(!firstName) return res.status(400).json({success:false,message:"First Name is required"})
+  if(!lastName) return res.status(400).json({success:false,message:"last Name is required"})
+  if(!email) return res.status(400).json({success:false,message:"email is required"})
+  if(!occupation) return res.status(400).json({success:false,message:"occupation is required"})
+  if(!avatarURL) return res.status(400).json({success:false,message:"Please upload a photo"})
+  next();
+}
+
+router.post("/",validateUserInfo,async (req,res) => {
+  try{
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const occupation = req.body.occupation;
+    const avatarURL = req.body.avatarURL;
+
+    const insert = await pool.query("INSERT INTO usersTable (firstName, lastName, email, occupation, avatarURL) VALUES ($1, $2, $3, $4, $5)", [firstName, lastName, email, occupation, avatarURL])
+    
+    if(insert.rowCount === 1){
+      res.status(201).json({success:true,message:"User created successfully"});
+    }
+  }
+  catch(err){
+    res.status(500).json({success:false,message:err.message})
+  }
 })
 
 router.patch("/:id",(req,res) => {
