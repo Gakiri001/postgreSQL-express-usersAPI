@@ -1,10 +1,10 @@
-import express from 'express'
-import usersrouter from "./routes/users.route.js"
+import express from "express";
+import usersrouter from "./routes/users.route.js";
 
 const app = express();
 app.use(express.json());
 
-app.use("/users", usersrouter)
+app.use("/users", usersrouter);
 // app.get("/",(req,res) => {
 //   res.send("hello")
 // })
@@ -12,6 +12,6 @@ app.use("/users", usersrouter)
 //   res.send("creating a user")
 // })
 
-app.listen(8080,() => {
-  console.log("server on port 8080")
-})
+app.listen(8080, () => {
+  console.log("server on port 8080");
+});
